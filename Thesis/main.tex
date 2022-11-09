@@ -1,0 +1,39 @@
+\documentclass{article}
+
+\usepackage[margin=1.0in]{geometry}
+\usepackage{subfiles}
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={Overleaf Example},
+    pdfpagemode=FullScreen,
+}
+
+\urlstyle{same}
+
+\begin{document}
+
+\tableofcontents
+% What the table of contents should include
+% Introduction
+% Background
+% Non-null pointers
+% Asynchronous I/O
+% Wuffs (potential)
+% Discussion (possibly subsections for benefits and drawbacks)
+% Future work section
+% Bibliography/Works cited
+
+\subfile{Introduction.tex}
+\subfile{Background.tex}
+\subfile{nonnull.tex}
+\subfile{async.tex}
+\subfile{wuffs.tex}
+\subfile{discussion.tex}
+\subfile{future.tex}
+\subfile{Citations.tex}
+\end{document}
