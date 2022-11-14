@@ -1,0 +1,23 @@
+pub func parser.parse?(src: base.io_reader) {
+    var c : base.u8
+    while true {
+        c = args.src.read_u8?()
+        if c == 0 {
+            return ok
+        }
+        if (c < 0x30) or (0x39 < c) { // '0' and '9' in ASCII
+            return "#not a digit"
+        }
+        //Rebase from ASCII to numeric value
+        c -= 0x30
+
+        if this.val < 429_496729 {
+            this.val = (10 * this.val) + (c as base.u32)
+            continue
+        } else if (this.val > 429_496729) or (c > 5) {
+            return "#too large"
+        }
+
+        this.val = (10 * this.val) + (c as base.u32)
+    } endwhile
+}

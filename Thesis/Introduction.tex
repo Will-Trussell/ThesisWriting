@@ -4,41 +4,38 @@
 \title{Introduction}
 
 \begin{document}
-\section*{Introduction}
+\section{Introduction}
 
-Extensible programming languages (cite Douglas McIlroy) were first discussed in
-the 1960s. The original basic concept was that you have a base language that can
-be extended through some meta-language. This has been modernized to include 
-various other concepts, including extensible syntax, extensible compilers, 
-extensible runtimes, as well as the idea of separting content from form.
+Extensible programming languages were first discussed in the 1960s. As
+originally discussed in Douglas McIlroy's 1960 paper, the original concept was
+to use a small number of macros in order to extend a compiler to accept very
+general extensions to the original language accepted by the compiler (CITE
+McIlroy's paper). This has been modernized in various ways, including the idea
+of extensible syntax, compilers, and even extensible runtimes (CITE? wiki has
+dead link).
 
-One example of an extensible programming language is \verb|AbleC|(cite), an 
+One example of an extensible programming language is \verb|ABLE|C (cite), an 
 extensible version of the C programming language, built on top of the 
 \verb|Silver| (cite) attribute grammar system. Various extensions exist for 
-\verb|AbleC| that were created to solve various problems.
+\verb|ABLE|C that were created to solve various problems (CITE paper containing
+extensions from MELT). 
 
 This paper examines the uses of extensible programming languages in a real-world
 application: an Internet Relay Chat (IRC) server implementation. The IRC
-protocol was originally designed for text-based conferencing (cite IRC RFC).
+protocol was originally designed for text-based conferencing (cite IRC RFC), and
+many server implementations are available. For this paper, we consider the
+specific implementation of \verb|ngIRCd| (next-generation IRC daemon), written 
+in the C programming language. This open-source server allows for end users to 
+clone the server and modify it to suit their specific purposes. These 
+modifications, however, open the server up to various security vulnerabilities. 
+The C programming language, while fast, does not provide many security checks 
+for the programmer. We desire a way of allowing users to modify the server 
+without introducing any security vulnerabilities.
 
-Internet Relay Chat (IRC) is a protocol designed for text-based conferencing. It
-is designed as a network of servers, users, and channels (reference to original
-IRC RFC here from Oikarinen \& Reed). Within this paper, we will
+Modifying this C code provides a natural use for the \verb|ABLE|C language. By
+introducing both new and existing extensions to the \verb|ngIRCd| server, we are
+able to both eliminate certain existing vulnerabilities in the server that are
+innate to the C programming language, but also we can make certain aspects of
+the server easier to implement and understand for end users, as well.
 
-Introduction should cover:
-\begin{itemize}
-    \item Overview of what the objective of the paper is
-    \item Discussion of AbleC (reference to original papers)
-    \item Discuss the original NGIRCd server
-    \item Discuss motivation of adding these extensions
-    \item At this point, probably want to discuss the specific extensions that 
-        were implemented
-        \begin{itemize}
-            \item Discussion of nonnull can be fairly brief
-            \item Discussion of Wuffs parsing
-            \item Discussion of asynchronous
-        \end{itemize}
-    \item The discussions should include information on what motivates the 
-        specific extensions.
-\end{itemize}
 \end{document}

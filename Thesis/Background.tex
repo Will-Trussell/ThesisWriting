@@ -2,7 +2,92 @@
 
 \begin{document}
 
-\section*{Background}
-Background information will go here
+\section{Background}
+
+This chapter provides background information for the work that follows
+throughout the paper. First, we discuss the existing nonnull type qualifier
+extension implemented as a language extension to \verb|ABLE|C. Next, we discuss
+the two new extensions written for this project: an extension allowing for
+easier use of asynchronous IO and an extension allowing the use of the Wuffs
+programming language in the parsing of messages.
+
+\subsection{Nonnull Qualifiers}
+One of the most common sources of bugs in the C programming language is errors
+related to null pointers. The dereferencing of a null pointer is considered
+undefined behavior in C (cite ISO/IEC 9899 clause 6.5.3.2 paragraph 4, footnote
+87), and is extremely undesirable in programming. We introduce an extension to
+\verb|ABLE|C to deal with null pointers (referred to herein as
+\verb|ABLE|C-nonnull). This extension allows for compile-time
+checking for any possible null dereferences of pointers.
+
+The fact that \verb|ABLE|C-nonnull allows for compile-time checking of possible
+null pointer dereferences is incredibly valuable to a programmer and allows for
+the avoidance of many headaches typically associated with dealing with pointers
+in C.
+% What else should go in this section? It seems that at least something else
+% should go here, but it also is only background on the extension. I don't think
+% we want to include anything about the actual implementation of the extension
+% or where it is used in the project, we simply want to discuss the benefits of
+% using the extension or why we chose this extension.
+
+
+\subsection{Asynchronous I/O}
+Asynchronous I/O is a major part of the difficulty in creating a server
+implemenation in C, particularly when using threads is not a viable option. We
+don't want the server to be stuck while we wait for it to perform some I/O
+operation like reading or writing to an existing connection, when the server has
+other tasks it could be doing, like establishing new client connections or
+parsing an already-received message. In C, one of the primary ways of performing
+asynchronous I/O is using the \verb|epoll| API. Using this API, we are able to
+keep a list of file descriptors we want the current process to monitor, as well
+as a list of file descriptors that are ready for I/O. However, this process is
+extraordinarily tedious, requiring many expensive system calls to set up and
+maintain the \verb|epoll| instance. When compared with other, more modern
+languages, the \verb|epoll| API is both more verbose and more difficult to use.
+Consider a more modern language like Go or Javascript. Both of these languages
+have their own facilities for asynchronous operation. In Go, we use several
+constructs, including the \verb|go| and \verb|select| keywords, to implement
+various aspects of I/O. In Javascript, we utilize both the \verb|async| and
+\verb|await| keywords, as well as the idea of \emph{promises} in order to
+achieve some measure of asynchronous operation.
+
+\subsection{Wuffs}
+A final extension implemented for this project involves the Wuffs language.
+Wuffs is a language created by Google for memory-safe handling of untrusted file
+formats. Originally intended for use in security-specific portions of a program,
+Wuffs allows for compile-time checking of various security vulnerabilities, as
+well as some semi-rigorous proofs of program safety.
+
+A simple parsing program in C is shown below. The same parsing program is also
+shown in Wuffs as a comparison of the two languages. Both of these programs take
+as input a string of numbers, for example, \verb|"123"|, and return the
+associated numeric value, in this case, 123.
+
+\begin{singlespace}
+    \begin{figure}[p!]
+        \caption{Parsing in C}
+        \lstinputlisting{parse_bg.c}
+    \end{figure}
+    \begin{figure}[p!]
+        \caption{Parsing in Wuffs}
+        \lstinputlisting{parse_bg.wuffs}
+    \end{figure}
+\end{singlespace}
+
+Leaving aside the syntactic peculiarities of Wuffs, note that the Wuffs code is
+signficantly more verbose than the C code in the above examples. However, we
+consider the edge cases of parsing some string, particularly with regards to
+integer overflow. In C, an integer overflow error can occur, but it does so
+silently. Obviously, in a real C parser implementation, we would implement
+security checks to cover these overflow cases. The point, however, is less about
+the fact that this is possible in C and more about the fact that these checks
+are mandatory in Wuffs. The Wuffs compiler will not allow an addition expression
+that could possibly overflow the maximum integer value.
+
+This compile-time security checking for basic security vulnerabilites is
+incredibly useful, particularly in contexts where we are parsing unknown code or
+strings that could be malicious. We don't need to worry about runtime security
+checks when we can use Wuffs to guarantee no buffer overflows, out-of-bounds 
+array accessing, integer overflow, or integer underflow at compile time. 
 
 \end{document}
