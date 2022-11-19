@@ -3,7 +3,81 @@
 \begin{document}
 
 \section{Wuffs Parsing}
-Information here about the Wuffs extension. Probably also want to include
-details about what Wuffs is, why we're including it
+
+\subsection{Wuffs Overview}
+A final extension implemented for this project involves the Wuffs language.
+Wuffs is a language created by Google for memory-safe handling of untrusted file
+formats. Originally intended for use in security-specific portions of a program,
+Wuffs allows for compile-time checking of various security vulnerabilities, as
+well as some semi-rigorous proofs of program safety.
+
+A simple parsing program in C is shown below. The same parsing program is also
+shown in Wuffs as a comparison of the two languages. Both of these programs take
+as input a string of numbers, for example, \verb|"123"|, and return the
+associated numeric value, in this case, 123.
+
+\begin{singlespace}
+    \begin{figure}[p!]
+        \lstinputlisting{./res/parse_bg.c}
+        \caption{Parsing in C}
+    \end{figure}
+    \begin{figure}[p!]
+        \lstinputlisting{./res/parse_bg.wuffs}
+        \caption{Parsing in Wuffs}
+    \end{figure}
+\end{singlespace}
+
+Leaving aside the syntactic peculiarities of Wuffs, note that the Wuffs code is
+signficantly more verbose than the C code in the above examples. However, we
+consider the edge cases of parsing some string, particularly with regards to
+integer overflow. In C, an integer overflow error can occur, but it does so
+silently. Obviously, in a real C parser implementation, we would implement
+security checks to cover these overflow cases. The point, however, is less about
+the fact that this is possible in C and more about the fact that these checks
+are mandatory in Wuffs. The Wuffs compiler will not allow an addition expression
+that could possibly overflow the maximum integer value.
+
+This compile-time security checking for basic security vulnerabilites is
+incredibly useful, particularly in contexts where we are parsing unknown code or
+strings that could be malicious. We don't need to worry about runtime security
+checks when we can use Wuffs to guarantee no buffer overflows, out-of-bounds 
+array accessing, integer overflow, or integer underflow at compile time.
+
+\subsection{Wuffs Extension}
+In this section, we discuss the mechanics of the Wuffs extension. For more details, examine the concrete syntax file
+for the \verb|ABLE|C-wuffs extension. The extension is surprisingly simple, given the benefits it adds to a project.
+
+The extension simply looks for a block of code delineated by the markers \verb|WUFFS| and \verb|WUFFS_END|. The
+code within these two markers is assumed to be valid Wuffs code. This code is loaded into its own \verb|.wuffs| file,
+which is then compiled using the Wuffs compiler into a C file. In the original \verb|ABLE|C file, we replace the original
+block of Wuffs code with boilerplate code that includes linking the new C file with the Wuffs functions, as well as calling
+those functions to parse the input, store the input, and validate the results. Note in the code snippet of the parse 
+function using the extension that all of the Wuffs code is within the larger \verb|parse()| function. This means that we
+need to do minimal editing of the rest of the file. We can retain the already written functions provided out-of-the-box by
+the server. In fact, in this case, the only function from the \verb|parse.c| file that needs to be modified is the primary
+\verb|parse()| function. The end programmer does not need to concern themselves with writing the C code to call any
+Wuffs functions -- the extension is able to take care of inserting those function calls for us, allowing the programmer to
+simply write the parsing details in Wuffs.
+
+\subsection{Wuffs Implementation}
+Below, we have two code snippets of a parsing function. The first snippet is from the original server code.
+It contains a C implementation of the parser. The second code snippet is an edited Wuffs implementation of the parser, with some code removed for brevity. 
+\begin{figure}[hp]
+	\lstinputlisting{./res/parse_before.c}
+	\caption{The parse function before adding the Wuffs extension}
+\end{figure}
+\begin{figure}[hp]
+	\lstinputlisting{./res/parse_after.c}
+	\caption{The parse function after adding the Wuffs extension}
+\end{figure}
+
+We consider the differences between these two implementations. Obviously, there is a difference in syntax
+between the two languages. Beyond that, however, we consider the differences between the two implementations.
+First, we must primarily note that the C implementation has no guarantees of safety. If the program compiles, all
+we can be sure of is that there are no syntax errors in the file. We have no guarantees that, given some malicious
+input string, we won't be vulnerable to any attacks. In our Wuffs implementation, this code is sent off to the Wuffs
+compiler during compilation. The Wuffs compiler is able to tell us whether we are vulnerable to buffer overflows or
+other attacks. This is the largest benefit of using this extension. We get the speed of C code, but the safety and
+guarantees provided by the Wuffs compiler.
 
 \end{document}

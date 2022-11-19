@@ -4,6 +4,36 @@
 
 \section{Non-Null Pointer Extension}
 
-Information on the \verb|ableC| non-null pointer extension here.
+\subsection{Non-null Qualifiers}
+One of the most common sources of bugs in the C programming language is errors
+related to null pointers. The dereferencing of a null pointer is considered
+undefined behavior in C, and is undesirable when programming. In this section, we introduce an \verb|ABLE|C extension to
+deal with null pointers (referred to herein as \verb|ABLE|C-nonnull). This extension allows for compile-time
+checking for any possible null dereferences of pointers. This static analysis of a program is valuable, saving
+the programmer both time and effort when compared with the original C code. 
+
+\subsection{Comparison}
+
+Consider the code here from the same function, one rewritten using \verb|ABLE|C-nonnull. Note the difference
+in the two examples below. 
+
+\begin{figure}[h]
+\lstinputlisting[language=C, firstline=84, lastline=96]{./res/nonnull_before.c}
+\caption{Function before applying the non-null extension}
+\end{figure}
+\begin{figure}[h]
+\lstinputlisting[language=C, firstline=82, lastline=89]{./res/nonnull_after.c}
+\caption{Function after applying the non-null extension}
+\end{figure}
+
+The first example is a simple function to copy a string into an array as it is written in the original project. Note that if 
+this function is passed a null pointer for either of the two pointer arguments, the \verb|assert| statement will fail, causing a call to the \verb|abort()| function, crashing our program.
+
+Compare this to the function we get after applying the non-null extension. Here, we know that both pointer arguments
+are guaranteed to be non-null. Thus, we no longer need either of the assert statements, nor do we need the check in the
+\verb|if| statement. This is a toy example implemented to illustrate the point that including this extension allows for shorter functions and fewer safety checks on the part of the end programmer.
+%Here, compare array.c from before to array.xc now.
+% Things to note: asserts are no longer necessary (no more fails during runtime)
+% Code cleanliness: no need to check pointers
 
 \end{document}

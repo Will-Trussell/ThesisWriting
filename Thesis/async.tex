@@ -3,6 +3,40 @@
 \begin{document}
 
 \section{Asynchronous I/O}
-Information about the \verb|ableC| Asynchronous I/O extension
+
+\subsection{Asynchronous I/O}
+Asynchronous I/O is a major part of the difficulty in creating a server
+implemenation in C, particularly when using threads is not a viable option. We
+don't want the server to be stuck while we wait for it to perform some I/O
+operation like reading or writing to an existing connection when the server has
+other tasks it could be doing, like establishing new client connections or
+parsing an already-received message. In C, one of the primary ways of performing
+asynchronous I/O is using the \verb|epoll| API. Using this API, we are able to
+keep a list of file descriptors we want the current process to monitor, as well
+as a list of file descriptors that are ready for I/O. However, this process is
+extraordinarily tedious, requiring many expensive system calls to set up and
+maintain the \verb|epoll| instance. When compared with other, more modern
+languages, the \verb|epoll| API is both more verbose and more difficult to use.
+Consider a more modern language like Go or Javascript. Both of these languages
+have their own facilities for asynchronous operation. In Go, we use several
+constructs, including the \verb|go| and \verb|select| keywords, to implement
+various aspects of I/O. In Javascript, we utilize both the \verb|async| and
+\verb|await| keywords, as well as the idea of \emph{promises} in order to
+achieve some measure of asynchronous operation. The goal of our extension is to
+include these same facilities in \verb|ABLE|C, allowing for a programmer to more
+easily write and understand the code performing asynchronous I/O operations.
+
+\subsection{Asynchronous I/O Extension}
+%Discussion of extension, mechanics behind it
+In this section, we discuss the mechanics of the Asynchronous I/O extension, including
+the specifics of the translation from \verb|ABLE|C code (\verb|.xc| files) to plain C code.
+
+\subsection{Asynchronous I/O Implementation}
+%Discussion of actual implementation of extension
+
+\begin{figure}
+\end{figure}
+\begin{figure}
+\end{figure}
 
 \end{document}
