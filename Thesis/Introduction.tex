@@ -10,18 +10,17 @@ Extensible programming languages were first discussed in the 1960s. As
 originally discussed in Douglas McIlroy's 1960 paper, the original concept was
 to use a small number of macros in order to extend a compiler to accept very
 general extensions to the original language accepted by the compiler 
-\cite{McIlroy}. This has been modernized in various ways, including the idea
-of extensible syntax, compilers, and even extensible runtimes (CITE? wiki has
-dead link).
+\cite{5}. This has been modernized in various ways, including the idea
+of extensible syntax and compilers.
 
-One example of an extensible programming language is \verb|ABLE|C \cite{ableC}, 
+One example of an extensible programming language is \verb|ABLE|C \cite{7}, 
 an extensible version of the C programming language, built on top of the 
-\verb|Silver| \cite{silver} attribute grammar system. Various extensions exist for 
+\verb|Silver| \cite{2} attribute grammar system. Various extensions exist for 
 \verb|ABLE|C that were created to solve various problems. 
 
 This paper examines the uses of extensible programming languages in a real-world
 application: an Internet Relay Chat (IRC) server implementation. The IRC
-protocol was originally designed for text-based conferencing \cite{IRC}, and
+protocol was originally designed for text-based conferencing \cite{6}, and
 many server implementations are available. For this paper, we consider the
 specific implementation of \verb|ngIRCd| (next-generation IRC daemon), written 
 in the C programming language. There are several potential issues with this 
@@ -33,7 +32,7 @@ issue with the server is writing easily understandable I/O code in C. While the
 we introduce another \verb|ABLE|C extension to provide improved syntax for 
 asynchronous I/O, akin to what Javascript provides. Finally, we introduce an 
 extension to ensure that parsing code is secure. We do this utilizing the Wuffs 
-programming language \cite{wuffs}, which allows for compile-time checking for various 
+programming language \cite{4}, which allows for compile-time checking for various 
 parsing attacks which must be manually accounted for at run-time in C.
 
 \end{document}

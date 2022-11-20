@@ -36,12 +36,11 @@ on providing syntax that is both easy to understand and easy to write for a prog
 To this end, we retain some of the same principles utilized by the \verb|epoll| API, but introduce similar syntax to
 modern languages with the \verb|spawn| and \verb|await| keywords.
 
-The \verb|spawn| keyword has similar syntax to the \verb|spawn| keyword in Cilk (cite Aaron's thesis? Or cilk docs),
-the \verb|spawn()| method in Ruby, or the \verb|spawn()| method in Rust. All of these keywords have a similar idea
-that underlies them. Each of these languages uses \verb|spawn| to indicate starting a new process, thread or function call.
-The syntax for all three is also similar in concept, as well. Each has the form \verb|spawn <foo>|, where what is in 
-\verb|foo| is either a function or a closure (in Rust). This starts program execution on whatever task is passed through 
-\verb|foo|.
+The \verb|spawn| keyword has similar syntax to the \verb|spawn| keyword in Cilk \cite[1], the \verb|spawn()| method in
+Ruby, or the \verb|spawn()| method in Rust. All of these keywords have a similar idea that underlies them. Each of
+these languages uses \verb|spawn| to indicate starting a new process, thread or function call. The syntax for all three is
+also similar in concept, as well. Each has the form \verb|spawn <foo>|, where what is in \verb|foo| is either a function or
+a closure (in Rust). This starts program execution on whatever task is passed through \verb|foo|.
 
 The \verb|await| keyword is at least partially inspired by the syntax of Javascript. After we spawn several tasks using
 \verb|spawn|, we can then specify that we would like to wait for those tasks using \verb|await|. The syntax is similar to
@@ -73,11 +72,11 @@ any new constants or for the end programmer to do any substantial coding (outsid
 asynchronously, which would have been written anyways without the extension).
 
 \begin{figure}
-	\lstinputlisting[language=C, firstline=10,basicstyle=\footnotesize]{./res/async_before.c}
+	\lstinputlisting[language=C, firstline=10,basicstyle=\scriptsize]{./res/async_before.c}
 	\caption{A file utilizing the asynchronous I/O Interface before implementing the extension}
 \end{figure}
 \begin{figure}
-	\lstinputlisting[language=C,firstline=10,basicstyle=\footnotesize]{./res/async_after.c}
+	\lstinputlisting[language=C,firstline=10,basicstyle=\scriptsize]{./res/async_after.c}
 	\caption{A file utilizing the asynchronous I/O interface after implementing the extension}
 \end{figure}
 
