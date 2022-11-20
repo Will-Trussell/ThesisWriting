@@ -31,12 +31,54 @@ easily write and understand the code performing asynchronous I/O operations.
 In this section, we discuss the mechanics of the Asynchronous I/O extension, including
 the specifics of the translation from \verb|ABLE|C code (\verb|.xc| files) to plain C code.
 
+This extension is less focused on redesigning the fundamentals of asynchronous I/O and is more focused
+on providing syntax that is both easy to understand and easy to write for a programmer utilizing the extension.
+To this end, we retain some of the same principles utilized by the \verb|epoll| API, but introduce similar syntax to
+modern languages with the \verb|spawn| and \verb|await| keywords.
+
+The \verb|spawn| keyword has similar syntax to the \verb|spawn| keyword in Cilk (cite Aaron's thesis? Or cilk docs),
+the \verb|spawn()| method in Ruby, or the \verb|spawn()| method in Rust. All of these keywords have a similar idea
+that underlies them. Each of these languages uses \verb|spawn| to indicate starting a new process, thread or function call.
+The syntax for all three is also similar in concept, as well. Each has the form \verb|spawn <foo>|, where what is in 
+\verb|foo| is either a function or a closure (in Rust). This starts program execution on whatever task is passed through 
+\verb|foo|.
+
+The \verb|await| keyword is at least partially inspired by the syntax of Javascript. After we spawn several tasks using
+\verb|spawn|, we can then specify that we would like to wait for those tasks using \verb|await|. The syntax is similar to
+Javascript: we simply write \verb|await <foo>|, where \verb|foo|, after the \verb|await| call, refers to a task that was created and
+run using the \verb|spawn| keyword. In other words, \verb|await| simply waits until at least one of the tasks we have spawned
+finishes, then loads that task (or tasks) into \verb|foo|.
+
 \subsection{Asynchronous I/O Implementation}
 %Discussion of actual implementation of extension
+Here we consider what changes are actually made by our extension. Consider the code snippets from the \verb|io.c| file, shown below.
+
+Note in the first example that we utilize the default \verb|io_event_add()| and \verb|io_dispatch()| functions. A particular
+issue that arises when dealing with these functions is the lack of high-level transparency in their calls. Perhaps 
+\verb|io_event_add()| is somewhat clear, but the \verb|io_dispatch()| function is particularly opaque. We make a call to the
+function with some \verb|timeval|, but we cannot determine the use of this function without substantial effort on the part of the
+programmer. 
+
+On the other hand, consider the implementation using the asynchronous extension. We are using the
+\verb|spawn| keyword to create new tasks, in this case, calling out to a \verb|read_helper()| or \verb|write_helper()| function.
+We do not require any knowledge of constants like \verb|IO_WANTREAD| or \verb|IO_WANTWRITE|, instead simply requiring
+the programmer to pass in whatever function the programmer desires to run asynchronously. 
+
+This extension is also a much more flexible implementation than what is available with the \verb|epoll| API. As an example,
+consider if a programmer wanted to modify the server to do something other than just read or write data using the \verb|epoll|
+API. In the old C code, this would require defining a set of new constants and substantial code modification. In our new
+extension, all the programmer must be concerned with is writing whatever function they desire to be executed asynchronously.
+Then, utilize \verb|spawn| with that function to register that function for asynchronous execution. There is no need to define
+any new constants or for the end programmer to do any substantial coding (outside of the function they desire to run
+asynchronously, which would have been written anyways without the extension).
 
 \begin{figure}
+	\lstinputlisting[language=C, firstline=10,basicstyle=\footnotesize]{./res/async_before.c}
+	\caption{A file utilizing the asynchronous I/O Interface before implementing the extension}
 \end{figure}
 \begin{figure}
+	\lstinputlisting[language=C,firstline=10,basicstyle=\footnotesize]{./res/async_after.c}
+	\caption{A file utilizing the asynchronous I/O interface after implementing the extension}
 \end{figure}
 
 \end{document}

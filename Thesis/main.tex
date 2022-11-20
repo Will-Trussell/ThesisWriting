@@ -8,25 +8,36 @@
 \usepackage{wrapfig}
 \usepackage{setspace}
 \doublespacing
-
+\usepackage{pdfpages}
 \usepackage{hyperref}
 
 \urlstyle{same}
 
 \begin{document}
+
+\includepdf[pages=-]{thesistitlepagetemplate_0.pdf}
+
+\subfile{abstract.tex}
+
+\newpage
+
 \hypersetup{hidelinks}
 \tableofcontents
 
 \newpage
 
 \subfile{Introduction.tex}
+\newpage
 \subfile{Background.tex}
+\newpage
 \subfile{nonnull.tex}
+\newpage
 \subfile{async.tex}
+\newpage
 \subfile{wuffs.tex}
+\newpage
 \subfile{discussion.tex}
-\subfile{future.tex}
-
+\newpage
 \begin{thebibliography}{99}
     \bibitem{silver}
         E. Van Wyk, D. Bodin, J. Gao, and L. Krishnan, “Silver: An extensible 
