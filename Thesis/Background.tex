@@ -6,22 +6,39 @@
 
 This chapter provides background information for the work that follows
 throughout the paper. We first discuss the Silver attribute grammar system 
-\cite{2}, which is used to implement the extensions to the host language.
-We follow this with a discussion of \verb|ABLE|C \cite{7}, the extensible
+\cite{3}, which is used to implement the extensions to the host language.
+We follow this with a discussion of \verb|ABLE|C \cite{8}, the extensible
 version of C utilized in this work.
 
 \subsection{Silver}
-Silver \cite{2}, created by Van Wyk et al. is an attribute grammar
-specification system. Furthermore, Silver is extensible, allowing us to add both
-general features (pattern matching, for instance) and domain-specific features
-to Silver. This gives us an attribute grammar specification system with a rich
-set of language features we can utilize in developing new extensions. 
+Silver \cite{3} is an extensible attribute grammar specification system that allows us to 
+add both general features (pattern matching, for instance) and domain-specific features
+to the host language. This gives us an attribute grammar specification system with a rich
+set of language features that we utilize in defining the syntax and semantics of any new 
+languages or extensions we may write.
 
 Silver has several nice features useful in generating new language extensions.
-First and foremost, Silver allows for \emph{forwarding} \cite{3} to 
+First and foremost, Silver allows for \emph{forwarding} \cite{4} to 
 implement new extensions in cost-effective ways. Forwarding allows language
-designers to utilize some form of inheritance within their language extensions,
-saving designers significant time and effort in creating new language features.
+designers to translate new syntax into the original host language. Using forwarding,
+language designers no longer need to explicitly define semantic analysis for each new
+piece of syntax in a language extension. Instead, any semantic analyses not defined
+by the language designer are instead defined via translation. A brief example of forwarding is 
+given here; for a more in-depth discussion, see the examples given in Section 1 of the paper 
+\emph{Forwarding in Attribute Grammars for Modular Language Design} \cite{4}.
+
+As an example, consider that we have some language with a defined string concatenation operator $++$.
+Now consider adding an extension to the language, the operator $++_S$. We desire this operator to do
+the following: given the expression $s_1 ++_S s_2$, we would like the resulting expression to be $s_2$
+\emph{sandwiched} between $s_1$. Thus, we would like the result of $s_1 ++_S s_2$ to be $s_1 s_2 s_1$.
+We could fully define the semantics of the new $++_S$ operator, but this would be a waste of both time and
+effort. Instead, we can simply define our new operator as follows.
+\begin{lstlisting}
+sandwich : str_0 ::= str_1 str_2
+	forwards to concat(str_1, concat(str_2, str_1))
+\end{lstlisting}
+By doing this, we are able to quickly define a new piece of syntax for our language, allowing us to add new
+syntax and semantics to a language quickly and easily.
 
 \subsection{Extensible Programming and Able-C}
 One of the primary programming languages that is utilized in modern computing
@@ -29,17 +46,20 @@ when speed or low-level control is vitally important is the C programming
 language. Unfortunately, C lacks many of the features of more modern programming
 languages, often making it cumbersome to work with in certain applications.
 
-One way that some have tried to improve upon the C language is through the use
-of extensions. Writing extensions to the C language, however, can be quite
-difficult, often involving many complications. For instance, the Cilk extension
-was introduced to C to allow for easier parallel programming. However, the
-original implementation of Cilk5 utilized its own type-checker, despite not
-changing the underlying C type system \cite{1, p.14}. 
-
-This difficulty in extending the C language was one of the motivations behind
-creating the \verb|ABLE|C language. Built utilizing Silver, \verb|ABLE|C is an 
-extensible C pre-processor, conforming to the C11 standard \cite{7}. It takes an
+\verb|ABLE|C \cite{9} is a project that tries to improve upon the C language is through the use
+of extensions. Built utilizing Silver, \verb|ABLE|C is an 
+extensible C pre-processor, conforming to the C11 standard \cite{8}. It takes an
 "extended" version of C and translates it back into plain C, performing
-transformations and analyses as it does so.
+transformations and analyses as it does so. For instance, there is an existing %Cite sqlite?
+\verb|ABLE|C extension that enables interaction with SQLite databases. With this
+extension, we begin with the \verb|ABLE|C files. These files are then translated
+into plain C code after going through type-checking and error-checking by the
+\verb|ABLE|C compiler. %Need to add more detail in the example?
+Another extension that provides a good example of the various analyses done by
+\verb|ABLE|C is the \verb|ABLE|C-refcount-closure extension. This extension
+implements reference counting of closures in C. The function performs analysis
+on how many references exist to a given closure to help with memory management.
+This is not a feature that is available in plain C code, but it is a useful tool for
+programmers to have in \verb|ABLE|C.
 
 \end{document}

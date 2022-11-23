@@ -10,7 +10,7 @@ the implemented extensions. We finish with a brief discussion of whether these e
 real-world piece of software.
 
 \subsection{Non-null Pointers}
-Consider the extension implementing compile-time checking for null pointer dereferences, discussed above in section 3.
+Consider the extension implementing compile-time and runtime checking for null pointer dereferences, discussed above in section 3.
 This extension, while relatively simple in its final form, is actually incredibly useful. When compared with a C implementation of
 a function that takes pointers as arguments, this extension offers immense upside. The programmer no longer needs to worry
 about checking every pointer for null dereferences at the beginning of the function.
@@ -24,9 +24,12 @@ dereference. If this were to happen, all of the data stored on the server (messa
 associated histories) would be lost.
 
 There are no readily apparent drawbacks to using our non-null extension, except for the idea that this extension likely will
-result in minor slowdowns to code. While not tested using any sort of reliable benchmark, consider the following toy example
-containing code utilizing the non-null extension, compared with code not utilizing this extension.
-%Examine toy examples from examples folder of non-null, simply do comparison of #Lines of code
+result in minor slowdowns to code. While not tested using any sort of reliable benchmark, consider the example illustrated
+in Figures 1, 2, 3, and 4. In particular, we consider Figures 1 and 4. These figures contain the C code that is being compiled and
+run by the host machine. We observe that Figure 1 contains 6 executable lines of code. Figure 4, on the other hand, contains
+significantly more lines of code that can be run. This would seem to indicate, at least upon a cursory examination, that the code in
+Figure 4 would run slightly slower, simply because there are more instructions to execute, though the difference in speed would
+likely be negligible in this application.
 
 \subsection{Asynchronous I/O}
 Next, we consider the extension implementing nicer facilities for asynchronous I/O than the syntax provided by plain C code.
@@ -37,7 +40,13 @@ allows us to focus on the conceptual ideas in the code; that is, we simply want 
 and we don't need to worry about modifying which tasks the \verb|epoll| instance is tracking manually.
 
 One drawback to our asynchronous extension is that we potentially lose some of the finer grains of control provided to us
-by the raw \verb|epoll| API. While this lack of control could potentially be improved using a more complex extension, we did
+by the raw \verb|epoll| API. As an example, consider Figure 5, specifically line 45. In this code pulled from the original IRC server, we see
+a call to \verb|io_event_add| with the constant \verb|IO_WANTREAD|. This indicates that we are starting an asynchronous task that specifically
+wants to perform \verb|read| operations in I/O. Consider the version of this code with the extension implemented in Figure 6, again at line
+45. Here, we no longer have the ease of simply specifying that we want to perform an asynchronous \verb|read| operation. Instead, we must
+define the specific function we want to run.
+
+While this lack of control could potentially be improved using a more complex extension, we did
 not consider such an extension within this paper. Additionally, adding complexity to the extension is perhaps antithetical to the
 idea of extensions in the first place. We wish to abstract away certain aspects of the host language using new syntax,
 so while we can achieve a more full control using more complexity, this added complexity may become more confusing than
@@ -50,12 +59,14 @@ leveraging this new tool to write a secure parsing function. The benefits to usi
 compared with the original C parsing function. The guarantees offered by Wuffs allow us to be certain that our program has
 no vulnerabilities to a variety of attacks. Additionally, with this extension, we no longer must worry about manually writing out
 the code to make the necessary calls to the Wuffs code after it has been compiled into C. Instead, the extension is able to
-take care of inserting these function calls as necessary.
+take care of inserting these function calls as necessary. Another benefit of this extension is that we do not need to worry about
+integrating a separate Wuffs file. We are instead able to write the Wuffs code \emph{in the same file} as the C code that will interact with
+the Wuffs code.
 
 Even with the added guarantees provided by the Wuffs compiler (requiring more checks than would be required in C code),
 the Wuffs extension will not have a noticeable slowdown, and could even offer a moderate speed-up in certain cases. For
 more details, see the benchmark documentation in the Wuffs repository for a comparison of various Wuffs libraries and
-default C implementations of those same libraries \cite{4}. 
+default C implementations of those same libraries \cite{5}. 
 
 \subsection{Applications in Other Software}
 We have seen the benefits brought by the extensions introduced in this paper. But are extensions a realistic way of writing

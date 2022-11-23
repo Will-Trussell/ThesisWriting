@@ -3,6 +3,23 @@
 \begin{document}
 
 \section{Future Work}
-Discussion of future work
+There are several possible ways of improving these extensions in the future. First, we consider the extension
+providing improved asynchronous I/O facilities. One possible way of improving this extension would be to expand
+the functionality beyond just a simple translation of \verb|spawn| to \verb|io_event_add| and \verb|await| to 
+\verb|io_dispatch|. While this functionality does provide better syntax for this project, having improved syntax to allow
+for more complicated constructs would be useful. One potential direction for this extension to go would be to follow a
+similar pattern to the \verb|select| construct in Go. This allows for programmers to wait for multiple communication
+operations to finish and then execute a set of instructions based on which communication finishes first. This, 
+implemented as an extension, would allow programmers to deal with conditions where we want to perform a read or
+write as soon as possible, as opposed to simply doing so asynchronously.
+
+We now consider what further improvements could be made to our Wuffs extension. First, we note that this the parser
+we have implemented in this project is relatively simple, only parsing text as input, where other parsers must parse
+much more complicated entities like images, audio files, and other file formats. In a more expansive project, it would be
+a nice feature for a programmer to be able to include in multiple locations different Wuffs blocks. To do this, we would
+need to allow the programmer to specify the Wuffs package name, as well as what calls to Wuffs functions the
+programmer would like to make. This would potentially eliminate some of the automation from the Wuffs extension,
+but it would still provide the same advantages (just to a lesser extent) over placing the Wuffs code in a separate file that
+must be integrated into the project separately.
 
 \end{document}

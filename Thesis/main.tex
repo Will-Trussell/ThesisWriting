@@ -5,6 +5,13 @@
 \addbibresource{citations.bib}
 \usepackage{subfiles}
 \usepackage{listings}
+\lstset
+{
+	language=C,
+	numbers=left,
+	stepnumber=1,
+	showstringspaces=false,
+}
 \usepackage{wrapfig}
 \usepackage{setspace}
 \doublespacing
@@ -38,7 +45,15 @@
 \newpage
 \subfile{discussion.tex}
 \newpage
+\subfile{future.tex}
+\newpage
 \begin{thebibliography}{99}
+%%% TODO: Renumber all citations
+	\bibitem{ngircd}
+		A. Barton, “Next generation IRC daemon2,” ngIRCd, 2001. [Online]. Available: https://ngircd.barton.de/.
+		[Accessed: 22-Nov-2022]. 
+
+
 	%1
 	\bibitem{aaron}
 		Councilman, Aaron. (2021). An Extensible Implementation-Agnostic Parallel Programming Framework for C in ableC. Retrieved from the University of

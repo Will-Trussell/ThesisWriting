@@ -27,8 +27,7 @@ GLOBAL void Conn_Handler(void) {
 			if (My_Connections[i].sock <= NONE)
 				continue;
 			wdatalen = array_bytes(&My_Connections[i].wbuf);
-			if (wdatalen > 0)
-			{
+			if (wdatalen > 0) {
 				//SSL Code omitted for brevity
 				io_event_add(My_Connections[i].sock, IO_WANTWRITE);
 			}

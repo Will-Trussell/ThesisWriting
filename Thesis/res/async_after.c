@@ -28,8 +28,8 @@ GLOBAL void Conn_Handler(void) {
 				continue;
 			wdatalen = array_bytes(&My_Connections[i].wbuf);
 			if (wdatalen > 0) {
-                                //SSL Code omitted for brevity
-                                spawn write_helper(My_Connections[i].sock)
+				//SSL Code omitted for brevity
+				spawn write_helper(My_Connections[i].sock)
 			}
 		}
 		for (i = 0; i < Pool_Size; i++) { //Check sockets for readability
@@ -51,7 +51,7 @@ GLOBAL void Conn_Handler(void) {
 				command_available = true;
 				continue;
 			}
-      spawn read_helper(My_Connections[i].sock);
+			spawn read_helper(My_Connections[i].sock);
 		}
 		tv.tv_usec = 0;
 		tv.tv_sec = command_available ? 0 : 1;

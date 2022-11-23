@@ -9,13 +9,11 @@ A final extension implemented for this project involves the Wuffs language.
 Wuffs is a language created by Google for memory-safe handling of untrusted file
 formats. Originally intended for use in security-specific portions of a program,
 Wuffs allows for compile-time checking of various security vulnerabilities, as
-well as some semi-rigorous proofs of program safety.
+well as some proofs of program safety.
 
-A simple parsing program in C is shown below. The same parsing program is also
-shown in Wuffs as a comparison of the two languages. Both of these programs take
-as input a string of numbers, for example, \verb|"123"|, and return the
-associated numeric value, in this case, 123.
-
+A simple parsing program in C is shown below in Figure 7. The same parsing program is also
+shown in Figure 8, this time written in Wuffs as a comparison of the two languages. Both of these programs take
+as input a string of numbers, for example, \verb|"123"|, and return the associated numeric value, in this case, 123.
 \begin{singlespace}
     \begin{figure}[p!]
         \lstinputlisting{./res/parse_bg.c}
@@ -26,7 +24,6 @@ associated numeric value, in this case, 123.
         \caption{Parsing in Wuffs}
     \end{figure}
 \end{singlespace}
-
 Leaving aside the syntactic peculiarities of Wuffs, note that the Wuffs code is
 signficantly more verbose than the C code in the above examples. However, we
 consider the edge cases of parsing some string, particularly with regards to
@@ -43,7 +40,7 @@ strings that could be malicious. We don't need to worry about runtime security
 checks when we can use Wuffs to guarantee no buffer overflows, out-of-bounds 
 array accessing, integer overflow, or integer underflow at compile time.
 
-\subsection{Wuffs Extension}
+\subsection{Wuffs Implementation}
 In this section, we discuss the mechanics of the Wuffs extension. For more details, examine the concrete syntax file
 for the \verb|ABLE|C-wuffs extension. The extension is surprisingly simple, given the benefits it adds to a project.
 
@@ -59,9 +56,10 @@ the server. In fact, in this case, the only function from the \verb|parse.c| fil
 Wuffs functions -- the extension is able to take care of inserting those function calls for us, allowing the programmer to
 simply write the parsing details in Wuffs.
 
-\subsection{Wuffs Implementation}
-Below, we have two code snippets of a parsing function. The first snippet is from the original server code.
-It contains a C implementation of the parser. The second code snippet is an edited Wuffs implementation of the parser, with some code removed for brevity. 
+\subsection{Wuffs Extension}
+Below, we have two code snippets of the parsing function from the IRC server. The first snippet, in Figure 9, is from the original 
+server code. It contains a C implementation of the parser. The second code snippet in Figure 10 is the Wuffs implementation 
+of the parser in our extension, with some code removed for brevity. 
 \begin{figure}[hp]
 	\lstinputlisting[basicstyle=\footnotesize]{./res/parse_before.c}
 	\caption{The parse function before adding the Wuffs extension}
