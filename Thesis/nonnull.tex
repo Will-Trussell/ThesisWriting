@@ -34,7 +34,8 @@ of the two pointer arguments, the \verb|assert| statement will fail, causing a c
 program.
 
 Compare this to Figure 2, which is the same function, but with the non-null extension. Here, we know that both pointer
-arguments are guaranteed to be non-null. Thus, we no longer need either of the assert statements, nor do we need the check in
+arguments are guaranteed to be non-null, as checks are inserted at the location of the function call. Thus, we no longer 
+need either of the assert statements, nor do we need the check in
 the \verb|if| statement. This is a toy example implemented to illustrate the point that including this extension allows for shorter 
 functions and fewer safety checks on the part of the end programmer.
 

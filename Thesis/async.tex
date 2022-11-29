@@ -19,7 +19,9 @@ maintain the \verb|epoll| instance. When compared with other, more modern
 languages, the \verb|epoll| API is both more verbose and more difficult to use.
 Consider a more modern language like Go or Javascript. Both of these languages
 have their own facilities for asynchronous operation. In Go, we use several
-constructs, including the \verb|go| and \verb|select| keywords, to implement
+constructs, including the \verb|go| (to start \emph{goroutines}, which are run by the runtime engine
+either on the current thread or automatically on another thread) and \verb|select| (to wait for any operations
+from some set of operations to complete) keywords, to implement
 various aspects of I/O. In Javascript, we utilize both the \verb|async| and
 \verb|await| keywords, as well as the idea of \emph{promises} in order to
 achieve some measure of asynchronous operation. The goal of our extension is to
@@ -43,10 +45,10 @@ also similar in concept, as well. Each has the form \verb|spawn <foo>|, where wh
 a closure (in Rust). This starts program execution on whatever task is passed through \verb|foo|.
 
 The \verb|await| keyword is at least partially inspired by the syntax of Javascript. After we spawn several tasks using
-\verb|spawn|, we can then specify that we would like to wait for those tasks using \verb|await|. The syntax is similar to
-Javascript: we simply write \verb|await <foo>|, where \verb|foo|, after the \verb|await| call, refers to a task that was created and
-run using the \verb|spawn| keyword. In other words, \verb|await| simply waits until at least one of the tasks we have spawned
-finishes, then loads that task (or tasks) into \verb|foo|.
+\verb|spawn|, we can then specify that we would like to wait for some of those tasks using \verb|await|. The syntax is similar to
+Javascript: we simply write \verb|await <foo>|, where \verb|foo|, after the \verb|await| call, is some timevalue object indicating how 
+long to wait. In other words, \verb|await| simply waits until at least one of the tasks we have spawned
+finishes, then returns, the same as a call to \verb|io_dispatch| would.
 
 \subsection{Asynchronous I/O Extension}
 %Discussion of actual implementation of extension

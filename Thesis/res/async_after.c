@@ -29,7 +29,7 @@ GLOBAL void Conn_Handler(void) {
 			wdatalen = array_bytes(&My_Connections[i].wbuf);
 			if (wdatalen > 0) {
 				//SSL Code omitted for brevity
-				spawn write_helper(My_Connections[i].sock)
+/* CHANGE */			spawn write_helper(My_Connections[i].sock)
 			}
 		}
 		for (i = 0; i < Pool_Size; i++) { //Check sockets for readability
@@ -51,12 +51,11 @@ GLOBAL void Conn_Handler(void) {
 				command_available = true;
 				continue;
 			}
-			spawn read_helper(My_Connections[i].sock);
+/* CHANGE */		spawn read_helper(My_Connections[i].sock);
 		}
 		tv.tv_usec = 0;
 		tv.tv_sec = command_available ? 0 : 1;
-                io_event *events;
-		i = await events; //Waits for some events, fills in events* with the events
+/*CHANGE*/	i = await tv; //Waits for some specified timevalue
 		if (i == -1 && errno != EINTR) { exit(1); } //fatal errors
 		if (Conf_IdleTimeout > 0 && NumConnectionsAccepted > 0
 		    && idle_t > 0 && time(NULL) - idle_t >= Conf_IdleTimeout) {
