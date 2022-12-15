@@ -7,13 +7,13 @@
 \section{Introduction}
 
 Extensible programming languages were first discussed in the 1960s. As
-originally discussed in Douglas McIlroy's 1960 paper, the original concept was
-to use a small number of macros in order to extend a compiler to accept very
+originally discussed in Douglas McIlroy's 1960 paper, the original approach was
+to use a small number of macros in order to extend a compiler to accept any
 general extensions to the original language accepted by the compiler 
-\cite{6}. This has been modernized in various ways, including the idea
-of extensible syntax and compilers.
+\cite{7}. This idea has been modernized in various ways, including the idea
+of extensible syntax and compilers that are themselves extensible.
 
-One example of an extensible programming language is \verb|ABLE|C \cite{9}, 
+One example of an extensible programming language is \verb|ABLE|C \cite{10}, 
 an extensible version of the C programming language, built on top of the 
 \verb|Silver| \cite{3} attribute grammar system. Various extensions exist for 
 \verb|ABLE|C that were created to solve various problems or add features. Such
@@ -21,21 +21,22 @@ extensions include facilities for greater ease of writing parallel code in C, us
 similar to Cilk\cite{2}, an implementation of closures in C, and the addition of algebraic
 data types and pattern matching.
 
-This paper examines the uses of extensible programming languages in a real-world
+This paper examines the uses of extensible programming languages when applied to a real-world
 application: an Internet Relay Chat (IRC) server implementation. The IRC
-protocol was originally designed for text-based conferencing \cite{7}, and
+protocol was designed for text-based conferencing \cite{8}, and
 many server implementations are available. For this paper, we consider the
 specific implementation of \verb|ngIRCd| (next-generation IRC daemon), written 
 in the C programming language \cite{1}. There are several potential issues with this 
-server implementation. First, any C program must include runtime checks to 
-ensure that all dereferenced pointers are not null. We introduce a pre-existing \verb|ABLE|C extension to 
+server implementation that present themselves to programmers modifying the server. 
+First, any C program must include runtime checks to 
+ensure that all dereferenced pointers are not null. We apply a pre-existing \verb|ABLE|C extension to 
 allow for both compile-time and runtime checking for possible null pointer dereferences.  Another 
-issue with the server is writing easily understandable I/O code in C. While the 
-\verb|epoll| API provided by the Linux kernel allows for some asynchronous I/O, 
-we introduce a new \verb|ABLE|C extension to provide improved syntax for 
+issue with the \verb|ngIRCd| server is writing easily understandable I/O code in C. While the 
+\verb|epoll| API \cite{5} provided by the Linux kernel allows for asynchronous I/O, 
+we introduce a new \verb|ABLE|C extension to provide improved and simpler syntax for 
 asynchronous I/O, akin to what Javascript provides. Finally, we introduce a new 
 extension to ensure that parsing code is secure from buffer overflow attacks. We do this utilizing the Wuffs 
-programming language \cite{5}, which allows for compile-time checking for various 
+programming language \cite{6}, which allows for compile-time checking for various 
 parsing attacks which must be manually accounted for at run-time in C.
 
 \end{document}

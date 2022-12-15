@@ -83,7 +83,7 @@ array_copy(array * dest, const array * const src)
 
 /* return false on failure (realloc failure, invalid src/dest array) */
 bool
-array_copyb(array * dest, const char *src, size_t len)
+array_copyb(array *dest, const char *src, size_t len)
 {
 	assert(dest != NULL);
 	assert(src != NULL );

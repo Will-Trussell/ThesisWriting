@@ -3,15 +3,16 @@
 \begin{document}
 \begin{center}\textbf{Abstract}\end{center}
 Extensible languages, first introduced in the 1960s by McIlroy, offer a way of adding new syntax and semantics to a
-base language. This work utilizes an extensible version of C to develop and implement new extensions to improve
-and modify an implementation of an Internet Relay Chat (IRC) server. Three extensions are utilized in order to
-show that extensions can be useful and effective in simplifying the process of developing code used in modern
+base language. This work utilizes \verb|ABLE|C, an extensible version of C conforming to the C11 standard, to develop 
+and implement new extensions to \verb|ABLE|C to improve
+and modify an implementation of an Internet Relay Chat (IRC) server. Two extensions are developed and a third is utilized in order to
+qualitatively show that extensions can be useful and effective in simplifying the process of developing code used in modern
 software applications. Two of these three extensions introduce syntax to allow for compile-time checking of features
-that are not able to be checked at compile-time in C, while the third introduces new syntax to provide programmers
-with easier and more concise syntax for performing asynchronous I/O. Of the three extensions, two were written 
-specifically for this work, while the third extension used was already written and just implemented for this work. This
+that cannot be checked at compile-time in C, while the third introduces new syntax to provide programmers
+with easier and more concise way of performing asynchronous I/O. Of the three extensions, two were written 
+specifically for this work, while the third extension used already existed and was applied for this work. This
 work not only examines the benefits provided by these extensions, but also includes an examination of the drawbacks
-of these extensions, primarily from the extension allowing for asynchronous I/O. This work demonstrates that the
+of the extension allowing for asynchronous I/O. This work demonstrates via qualitative comparisons that the
 benefits of extensible programming are real and extensions, particularly those including compile-time checking of
 concepts not available in vanilla C, offer significant improvements in code writing and readability over the same
 software written in plain C.

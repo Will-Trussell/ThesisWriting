@@ -13,7 +13,7 @@ operations to finish and then execute a set of instructions based on which commu
 implemented as an extension, would allow programmers to deal with conditions where we want to perform a read or
 write as soon as possible, as opposed to simply doing so asynchronously.
 
-We now consider what further improvements could be made to our Wuffs extension. First, we note that this the parser
+We now consider what further improvements could be made to our Wuffs extension. First, we note that the parser
 we have implemented in this project is relatively simple, only parsing text as input, where other parsers must parse
 much more complicated entities like images, audio files, and other file formats. In a more expansive project, it would be
 a nice feature for a programmer to be able to include in multiple locations different Wuffs blocks. To do this, we would
@@ -21,5 +21,10 @@ need to allow the programmer to specify the Wuffs package name, as well as what 
 programmer would like to make. This would potentially eliminate some of the automation from the Wuffs extension,
 but it would still provide the same advantages (just to a lesser extent) over placing the Wuffs code in a separate file that
 must be integrated into the project separately.
+
+Another possible improvement that could be made to our Wuffs extension would be to actually implement Wuffs in \verb|ABLE|C,
+which would allow us to compile the Wuffs code in-place, as opposed to in its own file. This would allow us to report
+any compiler errors with accurate line numbers referring to the original lines in the
+\verb|ABLE|C files, as opposed to the line within the Wuffs file, which is not as helpful to a programmer when debugging.
 
 \end{document}

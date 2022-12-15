@@ -5,19 +5,21 @@
 \section{Non-Null Pointer Extension}
 
 \subsection{Non-null Qualifiers}
-One of the most common sources of bugs in the C programming language is errors
+One of the most common class of bugs and errors in the C programming language is errors
 related to null pointers. The dereferencing of a null pointer is considered
 undefined behavior in C, and is undesirable when programming. In this section, we introduce an \verb|ABLE|C extension,
-first created by Travis Carlson \cite{8}, to
+first created by Travis Carlson \cite{9}, to
 deal with null pointers (referred to herein as \verb|ABLE|C-nonnull). This extension allows for compile-time
-checking for any possible null dereferences of pointers. This static analysis of a program is valuable, saving
+checking for any possible dereferences of null pointers. This static analysis of a program is valuable, saving
 the programmer both time and effort when compared with the original C code, which contains only dynamic checks
-at runtime. 
+at runtime that must be manually inserted by the programmer. 
 
 \subsection{Comparison}
 
-Consider the code in Figures 1 and 2. Both code snippets are from the same function in the \verb|array.c| (or \verb|array.xc|) file,
-with Figure 2 having been rewritten using \verb|ABLE|C-nonnull. Note the differences between the two figures.
+Consider the code snippets from \verb|ngIRC| presented in Figures 1 and 2. Both code snippets are from the same function that copies 
+an array from one pointer to another in the \verb|array.c| (or \verb|array.xc|) file,
+with Figure 2 having been rewritten using \verb|ABLE|C-nonnull. Note the differences between the two figures, namely, that we can
+remove the dynamic checks that are present in Figure 1 after applying our extension.
 
 \begin{figure}[h]
 \lstinputlisting[language=C, firstline=84, lastline=96,basicstyle=\small]{./res/nonnull_before.c}
@@ -28,30 +30,34 @@ with Figure 2 having been rewritten using \verb|ABLE|C-nonnull. Note the differe
 \caption{Function after applying the non-null extension}
 \end{figure}
 
-The code in Figure 1 is a simple function to copy a string into an array as it is written in the original project. It must explicitly
+The code in Figure 1 is a simple function to copy a string into an array as it is written in the original, unmodified project. It must explicitly
 check for null pointer dereferences using the \verb|assert| statements. Note that if this function is passed a null pointer for either
 of the two pointer arguments, the \verb|assert| statement will fail, causing a call to the \verb|abort()| function, crashing our
 program.
 
 Compare this to Figure 2, which is the same function, but with the non-null extension. Here, we know that both pointer
-arguments are guaranteed to be non-null, as checks are inserted at the location of the function call. Thus, we no longer 
-need either of the assert statements, nor do we need the check in
+arguments are guaranteed to be non-null in the body of this function, as checks are inserted at the location of the function call. 
+Thus, we no longer need either the assert statements or the check in
 the \verb|if| statement. This is a toy example implemented to illustrate the point that including this extension allows for shorter 
-functions and fewer safety checks on the part of the end programmer.
+functions and fewer manual safety checks on the part of the end programmer, though the \verb|nonnull| qualifier must still be inserted
+in order for this extension to function.
 
 As a final example of how this non-null extension works, we examine the translation of another function within the \verb|array.xc|
 file. The purpose of this function is to append a trailing null byte to an array, but not count that byte in the length of the array.
 Note that in Figure 3, we are casting the results of a call to \verb|array_alloc|. This is something the non-null extension will check
 at compile time. When we examine Figure 4, we see that the same cast is present, but there is a runtime check inserted after
-the cast to ensure that the pointer is not null. This is one way the extension guarantees that pointer dereferences are non-null.
+the cast to ensure that the pointer is not null. This is one way the extension guarantees that pointer dereferences are non-null. If the
+dereferences are null, the programmer will discover this immediately, allowing for an immediate debugging, instead of only finding out
+about the null pointer after trying to dereference the pointer in another code location.
 Additionally, note that the translated C code in Figure 4 contains many more parenthesis than would be strictly necessary.
-This is one of the oddities of \verb|ABLE|C, with extraneous parenthesis inserted during the translation process.
+These extraneous parenthesis are inserted during the translation process, though the translated code is not necessarily intended to
+be examined by programmers.
 \begin{figure}[p]
-\lstinputlisting[language=C, lastline=8, basicstyle=\small]{./res/translation.c}
+\lstinputlisting[language=C, lastline=6, basicstyle=\small]{./res/translation.c}
 \caption{A function to append a null byte to an array}
 \end{figure}
 \begin{figure}[p]
-\lstinputlisting[language=C, firstline=10, basicstyle=\small]{./res/translation.c}
+\lstinputlisting[language=C, firstline=8, basicstyle=\small]{./res/translation.c}
 \caption{The same function to append a null byte to an array after being translated to C}
 \end{figure}
 

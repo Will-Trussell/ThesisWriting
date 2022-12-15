@@ -1,8 +1,6 @@
 /* append trailing NUL byte to array, but do not count it. */
 bool array_cat0_temporary(array * nonnull a) {
-  * nonnull endpos = (char * nonnull) array_alloc(a, 1, array_bytes(a));
-  if (!endpos)
-    return false;
+  char * nonnull endpos = (char * nonnull) array_alloc(a, 1, array_bytes(a));
   *endpos = '\0';
   return true;
 }

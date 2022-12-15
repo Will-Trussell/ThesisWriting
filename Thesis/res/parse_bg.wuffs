@@ -11,13 +11,14 @@ pub func parser.parse?(src: base.io_reader) {
         //Rebase from ASCII to numeric value
         c -= 0x30
 
+        //Integer values here refer to the largest uint32_t value
         if this.val < 429_496729 {
             this.val = (10 * this.val) + (c as base.u32)
-            continue
+            continue //goes back to top of while loop
         } else if (this.val > 429_496729) or (c > 5) {
             return "#too large"
         }
-
+        //This executes only if we have c==5 and this.val==429,496,729
         this.val = (10 * this.val) + (c as base.u32)
     } endwhile
 }

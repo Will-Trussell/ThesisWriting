@@ -12,6 +12,10 @@
 	stepnumber=1,
 	showstringspaces=false,
 }
+\lstset{emph={%  
+    endwhile%
+    },emphstyle={\bfseries}%
+}%
 \usepackage{wrapfig}
 \usepackage{setspace}
 \doublespacing
@@ -47,6 +51,9 @@
 \newpage
 \subfile{future.tex}
 \newpage
+%TODO:
+% REDO ALL CITATION NUMBERING
+% CHECK ALL OCCURANCES OF "ABLEC", MAKE SURE CAPITALIZATION IS CORRECT
 \begin{thebibliography}{99}
 	%1
 	\bibitem{ngircd}
@@ -70,35 +77,44 @@
 		E. Van Wyk, O. de Moor, K. Backhouse, and P. Kwiatkowski “Forwarding in 
         attribute grammars for modular language design,” Lecture Notes in 
         Computer Science, pp. 128–142, Apr. 2002.
+        %5
+    \bibitem{epoll}
+    	“epoll - Linux manual page,” Epoll(7) - linux manual page. [Online]. Available: https://man7.org/linux/man-pages/man7/epoll.7.html.
+	[Accessed: 13-Dec-2022]. 
     
-    %5
+    %6
     \bibitem{wuffs}
         Google, “Google/WUFFS: Wrangling untrusted file formats safely,” GitHub. 
         [Online]. Available: https://github.com/google/wuffs. [Accessed: 
         18-Nov-2022]. 
 	
-	%6
+	%7
 	\bibitem{McIlroy}
 		M. D. McIlroy, “Macro instruction extensions of compiler languages,” 
         Communications of the ACM, vol. 3, no. 4, pp. 214–220, 1960. 
 	
-	%7
+	%8
 	\bibitem{IRC}
 	    Oikarinen, J. and D. Reed, "Internet Relay Chat Protocol", RFC 1459, DOI 
         10.17487/RFC1459, May 1993, <https://www.rfc-editor.org/info/rfc1459>.
 	
-	%8
+	%9
 	\bibitem{nonnull}
 		T. Carlson and E. Van Wyk, “Type qualifiers as composable language 
 		extensions for code analysis and generation,” Journal of Computer 
 		Languages, vol. 50, pp. 49–69, 2019. 
 	
-	%9
+	%10
 	\bibitem{ableC}
 	    T. Kaminski, L. Kramer, T. Carlson, and E. Van Wyk, “Reliable and 
         automatic composition of language extensions to C: The ABLEC extensible 
         language framework,” Proceedings of the ACM on Programming Languages, 
         vol. 1, no. OOPSLA, pp. 1–29, 2017. 
+        
+        %11
+        \bibitem{repo}
+        		W. Trussell, “Modified ngIRCd Server,” GitHub. [Online]. Available: https://github.com/Will-Trussell/ngircd. 
+		[Accessed: 14-Dec-2022]. 
 \end{thebibliography}
 
 \end{document}

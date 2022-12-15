@@ -6,12 +6,13 @@
 
 \subsection{Asynchronous I/O}
 Asynchronous I/O is a major part of the difficulty in creating a server
-implemenation in C, particularly when using threads is not a viable option. We
+implemenation in C, particularly when using threads is not a viable option, 
+like in a situation where we have limited resources. We
 don't want the server to be stuck while we wait for it to perform some I/O
 operation like reading or writing to an existing connection when the server has
 other tasks it could be doing, like establishing new client connections or
 parsing an already-received message. In C, one of the primary ways of performing
-asynchronous I/O is using the \verb|epoll| API. Using this API, we are able to
+asynchronous I/O is using the \verb|epoll| API \cite{5}. Using this API, we are able to
 keep a list of file descriptors we want the current process to monitor, as well
 as a list of file descriptors that are ready for I/O. However, this process is
 extraordinarily tedious, requiring many expensive system calls to set up and
@@ -21,7 +22,7 @@ Consider a more modern language like Go or Javascript. Both of these languages
 have their own facilities for asynchronous operation. In Go, we use several
 constructs, including the \verb|go| (to start \emph{goroutines}, which are run by the runtime engine
 either on the current thread or automatically on another thread) and \verb|select| (to wait for any operations
-from some set of operations to complete) keywords, to implement
+from a set of operations to complete) keywords, to implement
 various aspects of I/O. In Javascript, we utilize both the \verb|async| and
 \verb|await| keywords, as well as the idea of \emph{promises} in order to
 achieve some measure of asynchronous operation. The goal of our extension is to
@@ -33,48 +34,47 @@ easily write and understand the code performing asynchronous I/O operations.
 In this section, we discuss the mechanics of the Asynchronous I/O extension, including
 the specifics of the translation from \verb|ABLE|C code to plain C code.
 
-This extension is less focused on redesigning the fundamentals of asynchronous I/O and is more focused
-on providing syntax that is both easy to understand and easy to write for a programmer utilizing the extension.
-To this end, we retain some of the same principles utilized by the \verb|epoll| API, but introduce similar syntax to
-modern languages with the \verb|spawn| and \verb|await| keywords.
+This extension is focused on providing syntax that is both easy to understand and easy to write 
+for a programmer utilizing the extension. To this end, we retain the same principles utilized by the 
+\verb|epoll| API, but introduce similar syntax to more modern languages with the \verb|spawn| keyword, 
+to create asynchronous processes, and the \verb|await| keyword, to wait for those processes to finish.
 
 The \verb|spawn| keyword has similar syntax to the \verb|spawn| keyword in Cilk \cite{2}, the \verb|spawn()| method in
-Ruby, or the \verb|spawn()| method in Rust. All of these keywords have a similar idea that underlies them. Each of
+Ruby, or the \verb|spawn()| method in Rust. These keywords and methods all have a similar idea that underlies them. Each of
 these languages uses \verb|spawn| to indicate starting a new process, thread or function call. The syntax for all three is
-also similar in concept, as well. Each has the form \verb|spawn <foo>|, where what is in \verb|foo| is either a function or
-a closure (in Rust). This starts program execution on whatever task is passed through \verb|foo|.
+similar, as well. Each has the form \verb|spawn <foo>|, where what is in \verb|foo| is either a function or
+a closure (in Rust). This starts program execution on whatever function or closure is passed through \verb|foo|.
 
 The \verb|await| keyword is at least partially inspired by the syntax of Javascript. After we spawn several tasks using
 \verb|spawn|, we can then specify that we would like to wait for some of those tasks using \verb|await|. The syntax is similar to
 Javascript: we simply write \verb|await <foo>|, where \verb|foo|, after the \verb|await| call, is some timevalue object indicating how 
 long to wait. In other words, \verb|await| simply waits until at least one of the tasks we have spawned
-finishes, then returns, the same as a call to \verb|io_dispatch| would.
+finishes, then returns.
 
 \subsection{Asynchronous I/O Extension}
 %Discussion of actual implementation of extension
-Here we consider what changes are actually made by our extension. Consider the code snippets from the \verb|io.c| file, shown below
-in Figure 5 and the code from the extension in Figure 6. The major changes between the figures are on lines 23, 45, and 50.
+Here we consider what the changes actually are when writing asynchronous code with the extension we have created. 
+Consider the code snippets from the \verb|io.c| file, shown below in Figure 5 and the code from the extension in Figure 
+6. The major changes between the figures are on lines 23, 45, and 50.
 
 Note in the first example that we utilize the default \verb|io_event_add()| and \verb|io_dispatch()| functions. A particular
-issue that arises when dealing with these functions is the lack of high-level transparency in their calls. Perhaps 
-\verb|io_event_add()| is somewhat clear, but the \verb|io_dispatch()| function is particularly opaque. We make a call to the
-function with some \verb|timeval|, but we cannot determine the use of this function without substantial effort on the part of the
-programmer. 
+issue that arises when dealing with these functions is the lack of immediate, high-level clarity in their calls. Perhaps 
+\verb|io_event_add()| is somewhat clear, but the arguments to the \verb|io_dispatch()| function are particularly difficult
+to understand. We make a call to the function with some \verb|timeval|, but it is not immediately apparent what the time value
+signifies: we don't know if we are waiting for a specific event, for one of many events, or several events.  
 
 On the other hand, consider the implementation using the asynchronous extension. We are using the
 \verb|spawn| keyword to create new tasks, in this case, calling out to a \verb|read_helper()| or \verb|write_helper()| function. These
 functions are helper functions that simply perform a write or a read to some socket file descriptor, and we are passing them to 
-\verb|spawn| as the function to be run in a task. Note that because of these helper functions, we do not require any knowledge of
-constants like \verb|IO_WANTREAD| or \verb|IO_WANTWRITE|, instead simply requiring the programmer to pass in whatever function
-the programmer desires to run asynchronously.
+\verb|spawn| as the function to be run asynchronously. Note that because of these helper functions, we simply require the programmer to pass in whatever function the programmer desires to run asynchronously.
 
 This extension is also a much more flexible implementation than what is available with the \verb|epoll| API. As an example,
-consider if a programmer wanted to modify the server to do something other than just read or write data using the \verb|epoll|
-API. In the old C code, this would require defining a set of new constants and substantial code modification. In our new
-extension, all the programmer must be concerned with is writing whatever function they desire to be executed asynchronously.
-Then, utilize \verb|spawn| with that function to register that function for asynchronous execution. There is no need to define
-any new constants or for the end programmer to do any substantial coding (outside of the function they desire to run
-asynchronously, which would have been written anyways without the extension).
+consider if a programmer wanted to modify the server to do something other than just read or write data. In the old C code, this would
+require defining a set of new constants and substantial code modification. In our new extension, all the programmer must be concerned
+with is writing whatever function they desire to be executed asynchronously. Then, utilize \verb|spawn| with that function to register that
+function for asynchronous execution. There is no need to define any new constants like \verb|IO_WANTREAD| or \verb|IO_WANTWRITE|, 
+nor is there a need for the end programmer to do any substantial coding (outside of the function they desire to run asynchronously, which
+would have been written anyways without the extension).
 
 \begin{figure}
 	\lstinputlisting[language=C, firstline=10,basicstyle=\scriptsize]{./res/async_before.c}

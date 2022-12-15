@@ -29,7 +29,7 @@ GLOBAL void Conn_Handler(void) {
 			wdatalen = array_bytes(&My_Connections[i].wbuf);
 			if (wdatalen > 0) {
 				//SSL Code omitted for brevity
-/* CHANGE */			spawn write_helper(My_Connections[i].sock)
+/* CHANGE */			spawn write_helper(My_Connections[i].sock);
 			}
 		}
 		for (i = 0; i < Pool_Size; i++) { //Check sockets for readability
@@ -37,7 +37,7 @@ GLOBAL void Conn_Handler(void) {
 				continue;
                         //SSL Code omitted for brevity
 			if (Proc_InProgress(&My_Connections[i].proc_stat)) {
-				io_event_del(My_Connections[i].sock, IO_WANTREAD);//Wait on subprocesses
+				io_event_del(My_Connections[i].sock, IO_WANTREAD);//Ignore this fd
 				continue;
 			}
 			if (Conn_OPTION_ISSET(&My_Connections[i], CONN_ISCONNECTING))
